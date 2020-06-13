@@ -6,16 +6,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.softseai.androidjetpack.R
-import kotlinx.android.synthetic.main.fragment_details.*
+import com.softseai.androidjetpack.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class ListFragment : Fragment() {
+
+    private lateinit var viewModel: ListViewModel
+    private val dogsListAdapter = DogsListAdapter(arrayListOf())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,11 +33,47 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listFab.setOnClickListener {
-            val action = ListFragmentDirections.actionDetailsFragment()
-            action.dogUuid = 5
-            Navigation.findNavController(it).navigate(action)
+        viewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)
+        viewModel.refresh()
+
+        dogs_list.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = dogsListAdapter
         }
+
+        observeViewModel()
+
+        //Button Click to navigate
+//        listFab.setOnClickListener {
+//            val action = ListFragmentDirections.actionDetailsFragment()
+//            action.dogUuid = 5
+//            Navigation.findNavController(it).navigate(action)
+//        }
+    }
+
+    fun observeViewModel() {
+        viewModel.dogs.observe(this, Observer { dogs ->
+            dogs?.let {
+                dogs_list.visibility = View.VISIBLE
+                dogsListAdapter.updateDogList(dogs)
+            }
+        })
+
+        viewModel.dogLoadError.observe(this, Observer { isError ->
+            isError?.let {
+                list_error.visibility = if (isError) View.VISIBLE else View.GONE
+            }
+        })
+
+        viewModel.loading.observe(this, Observer { isLoading ->
+            isLoading?.let {
+                loading_view.visibility = if (isLoading) View.VISIBLE else View.GONE
+                if (isLoading) {
+                    dogs_list.visibility = View.GONE
+                    list_error.visibility = View.GONE
+                }
+            }
+        })
     }
 
 
