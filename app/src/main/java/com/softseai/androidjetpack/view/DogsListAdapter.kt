@@ -7,6 +7,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.softseai.androidjetpack.R
 import com.softseai.androidjetpack.model.DogBreed
+import com.softseai.androidjetpack.util.getProgressDrawable
+import com.softseai.androidjetpack.util.loadImage
 import kotlinx.android.synthetic.main.dogs_list_item.view.*
 
 class DogsListAdapter(val dogsList: ArrayList<DogBreed>) :
@@ -32,6 +34,7 @@ class DogsListAdapter(val dogsList: ArrayList<DogBreed>) :
             Navigation.findNavController(it)
                 .navigate(ListFragmentDirections.actionDetailsFragment())
         }
+        holder.view.image.loadImage(dogsList[position].imageUrl, getProgressDrawable(holder.view.image.context))
     }
 
     override fun getItemCount() = dogsList.size
