@@ -45,7 +45,7 @@ class ListFragment : Fragment() {
             dogs_list.visibility = View.GONE
             list_error.visibility = View.GONE
             loading_view.visibility = View.VISIBLE
-            viewModel.refresh()
+            viewModel.refreshBypassCache()
             refreshLayout.isRefreshing = false
         }
 
@@ -59,7 +59,7 @@ class ListFragment : Fragment() {
 //        }
     }
 
-    fun observeViewModel() {
+    private fun observeViewModel() {
         viewModel.dogs.observe(this, Observer { dogs ->
             dogs?.let {
                 dogs_list.visibility = View.VISIBLE

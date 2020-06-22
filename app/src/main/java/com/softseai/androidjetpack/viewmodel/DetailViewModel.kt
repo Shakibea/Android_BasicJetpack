@@ -1,15 +1,18 @@
 package com.softseai.androidjetpack.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.softseai.androidjetpack.model.DogBreed
+import com.softseai.androidjetpack.model.DogDatabase
+import kotlinx.coroutines.launch
 
-class DetailViewModel : ViewModel() {
+class DetailViewModel(application: Application) : BaseViewModel(application) {
     val dogLiveData = MutableLiveData<DogBreed>()
 
-    fun fetch() {
-        val dog = DogBreed("1", "Black Dog", "13year", "BreedGroup", "BreedFor", "Temperanment", "")
-
-        dogLiveData.value = dog
+    fun fetch(id: Int) {
+        launch {
+            val getDog = DogDatabase(getApplication()).dogDao().getDog(id)
+            dogLiveData.value = getDog
+        }
     }
 }

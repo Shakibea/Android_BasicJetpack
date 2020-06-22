@@ -11,7 +11,7 @@ import com.softseai.androidjetpack.util.getProgressDrawable
 import com.softseai.androidjetpack.util.loadImage
 import kotlinx.android.synthetic.main.dogs_list_item.view.*
 
-class DogsListAdapter(val dogsList: ArrayList<DogBreed>) :
+class DogsListAdapter(private val dogsList: ArrayList<DogBreed>) :
     RecyclerView.Adapter<DogsListAdapter.DogViewHolder>() {
 
     //Working for API
@@ -31,10 +31,15 @@ class DogsListAdapter(val dogsList: ArrayList<DogBreed>) :
         holder.view.name.text = dogsList[position].dogBreed
         holder.view.lifespan.text = dogsList[position].lifeSpan
         holder.view.setOnClickListener {
+            val action = ListFragmentDirections.actionDetailsFragment()
+            action.dogUuid = dogsList[position].uuid
             Navigation.findNavController(it)
-                .navigate(ListFragmentDirections.actionDetailsFragment())
+                .navigate(action)
         }
-        holder.view.image.loadImage(dogsList[position].imageUrl, getProgressDrawable(holder.view.image.context))
+        holder.view.image.loadImage(
+            dogsList[position].imageUrl,
+            getProgressDrawable(holder.view.image.context)
+        )
     }
 
     override fun getItemCount() = dogsList.size

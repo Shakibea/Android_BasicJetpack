@@ -12,7 +12,10 @@ import androidx.navigation.Navigation
 
 import com.softseai.androidjetpack.R
 import com.softseai.androidjetpack.model.DogBreed
+import com.softseai.androidjetpack.util.getProgressDrawable
+import com.softseai.androidjetpack.util.loadImage
 import com.softseai.androidjetpack.viewmodel.DetailViewModel
+import kotlinx.android.synthetic.main.dogs_list_item.view.*
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_details.view.*
 
@@ -36,24 +39,29 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
-        viewModel.fetch()
-
         arguments?.let {
             dogUuid = DetailsFragmentArgs.fromBundle(it).dogUuid
         }
 
+        viewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
+        viewModel.fetch(dogUuid)
+
         observeViewModel()
     }
 
-    fun observeViewModel() {
+    private fun observeViewModel() {
         viewModel.dogLiveData.observe(this, Observer { dog ->
             dog?.let {
                 dog_name.text = dog.dogBreed
                 dog_lifespan.text = dog.lifeSpan
                 dog_purpose.text = dog.breedFor
                 dog_temperament.text = dog.temperament
+                context?.let {
+                    dog_image.loadImage(
+                        dog.imageUrl,
+                        getProgressDrawable(it)
+                    )
+                }
             }
         })
     }
