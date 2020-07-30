@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    
+    <data>
+        <variable
+            name="dog"
+            type="com.softseai.androidjetpack.model.DogBreed" />
+        <variable
+            name="listener"
+            type="com.softseai.androidjetpack.view.DogClickListener" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="125dp"
+        android:onClick="@{listener::onDogClicked}"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/dogId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@{String.valueOf(dog.uuid)}"/>
         <ImageView
             android:id="@+id/image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:contentDescription="Dog Image"
+            android:imageUrl="@{dog.imageUrl}"
             android:padding="4dp"
             tools:srcCompat="@tools:sample/avatars" />
 
@@ -29,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                tools:text="Dog Name" />
+                tools:text="@{dog.dogBreed}" />
 
             <TextView
                 android:id="@+id/lifespan"
@@ -37,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                tools:text="dog lifespan" />
+                tools:text="@{dog.lifeSpan}" />
 
         </LinearLayout>
 

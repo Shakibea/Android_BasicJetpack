@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 
 import com.softseai.androidjetpack.R
+import com.softseai.androidjetpack.databinding.FragmentDetailsBinding
 import com.softseai.androidjetpack.model.DogBreed
 import com.softseai.androidjetpack.util.getProgressDrawable
 import com.softseai.androidjetpack.util.loadImage
@@ -27,14 +29,18 @@ class DetailsFragment : Fragment() {
     private var dogUuid = 0
 
     private lateinit var viewModel: DetailViewModel
+    private lateinit var dataBinding: FragmentDetailsBinding
+
     private val dogsListAdapter = DogsListAdapter(arrayListOf())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
+//        return inflater.inflate(R.layout.fragment_details, container, fa
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_details, container, false)
+//        // Inflate the layout for this fragmentlse)
+        dataBinding = DataBindingUtil.inflate<FragmentDetailsBinding>(inflater, R.layout.fragment_details, container, false)
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,22 +52,24 @@ class DetailsFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
         viewModel.fetch(dogUuid)
 
+
         observeViewModel()
     }
 
     private fun observeViewModel() {
         viewModel.dogLiveData.observe(this, Observer { dog ->
             dog?.let {
-                dog_name.text = dog.dogBreed
-                dog_lifespan.text = dog.lifeSpan
-                dog_purpose.text = dog.breedFor
-                dog_temperament.text = dog.temperament
-                context?.let {
-                    dog_image.loadImage(
-                        dog.imageUrl,
-                        getProgressDrawable(it)
-                    )
-                }
+                dataBinding.dog = dog
+//                dog_name.text = dog.dogBreed
+//                dog_lifespan.text = dog.lifeSpan
+//                dog_purpose.text = dog.breedFor
+//                dog_temperament.text = dog.temperament
+//                context?.let {
+//                    dog_image.loadImage(
+//                        dog.imageUrl,
+//                        getProgressDrawable(it)
+//                    )
+//                }
             }
         })
     }

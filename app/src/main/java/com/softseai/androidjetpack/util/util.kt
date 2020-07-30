@@ -1,17 +1,12 @@
 package com.softseai.androidjetpack.util
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.DrawableCrossFadeTransition
 import com.softseai.androidjetpack.R
 
 fun getProgressDrawable(context: Context): CircularProgressDrawable {
@@ -42,6 +37,11 @@ fun ImageView.loadImage(uri: String?, progressDrawable: CircularProgressDrawable
         .apply(options)
 //        .listener(MyImageRequestListener(this))
         .into(this)
+}
+
+@BindingAdapter("android:imageUrl")
+fun loadImage(view: ImageView, url: String?){
+    view.loadImage(url, getProgressDrawable(view.context))
 }
 
 
